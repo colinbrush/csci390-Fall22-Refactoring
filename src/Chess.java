@@ -53,6 +53,7 @@ public class Chess {
 
     public void play() throws IOException {
         BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+        Move myMover = new Move(board);
         while(!gameIsOver()) {
             printBoardToConsole();
 
@@ -75,10 +76,18 @@ public class Chess {
                 continue;
             }
 
+            boolean capture = (move.charAt(2) == 'x');
+            if(capture){
+                myMover.capturePiece(move);
+            }
+            else{
+                myMover.movePiece(move);
+            }
+
             Square fromSquare = new Square();
             fromSquare.setFileIndex(calcFileIndex(move.charAt(0)));
             fromSquare.setRankIndex(calcRankIndex(Integer.valueOf(move.substring(1,2))));
-            boolean capture = (move.charAt(2) == 'x');
+
             int toFileIndex = calcFileIndex(move.charAt(3));
             int toRankIndex = calcRankIndex(Integer.valueOf(move.substring(4,5)));
 
@@ -316,8 +325,8 @@ public class Chess {
                     }
                 }
             } else {
+                int rankDelta = fromRankIndex - toRankIndex;
                 if(fromRankIndex == 1) {
-                    int rankDelta = fromRankIndex - toRankIndex;
                     if(rankDelta < -2 || rankDelta > -1) {
                         System.out.println("Cannot create valid path for Pawn.");
                         return false;
@@ -333,7 +342,6 @@ public class Chess {
                         }
                     }
                 } else {
-                    int rankDelta = fromRankIndex - toRankIndex;
                     if(rankDelta != -1) {
                         System.out.println("Cannot create valid path for Pawn.");
                         return false;
@@ -409,7 +417,6 @@ public class Chess {
     // TODO: Homework - Refactor this method to use a single parameter
 
     private void capturePiece(int fromFileIndex, int fromRankIndex, int toFileIndex, int toRankIndex, String pawnPromotionPiece) {
-        Piece fromPiece = board[fromRankIndex][fromFileIndex];
 
         // TODO: Homework - Create capture logic when a piece is capturing another piece
         //           Remember: Pieces can only capture opposing pieces
@@ -417,11 +424,32 @@ public class Chess {
         //                     We are not worrying about en passant. This is just the simple and basic moves.
         //           Use inspiration from the move method. Think about what can be refactored.
         //                     Extract method is your friend.
+        //I would so much rather just rewrite all of this code it makes me upset
+        Piece fromPiece = board[fromRankIndex][fromFileIndex];
+        Piece toPiece = board[toRankIndex][toFileIndex];
+        //Check they are different colors
+        if(pieceColor(toPiece) == pieceColor(fromPiece)){
+            return;
+        }
+        if(fromPiece.toString().equalsIgnoreCase("p")){
+
+        }
+        if(validateMove(fromPiece, fromFileIndex, fromRankIndex, toFileIndex, toRankIndex)){
+            return;
+        }
 
 
         //Move piece, if the move is allowed.
         board[toRankIndex][toFileIndex] = fromPiece;
         board[fromRankIndex][fromFileIndex] = null;
+    }
+
+    //true is white false is black;
+    private boolean pieceColor(Piece toCheck){
+        if(java.lang.Character.isUpperCase(toCheck.name().charAt(0))){
+            return true;
+        }
+        return false;
     }
 
     private static int calcFileIndex(Character file) {
