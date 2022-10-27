@@ -108,205 +108,10 @@ public class Chess {
             System.out.println("Select a square with a piece.");
             return;
         }
-
-        if (correctPlayerNotMovingTheirPiece(fromPiece)) return;
-
-        //Validate Piece Movement
-        if(fromPiece.toString().equalsIgnoreCase("n")) {
-            if (!((Math.abs(fromFileIndex - toFileIndex) == 2 && Math.abs(fromRankIndex - toRankIndex) == 1) || (Math.abs(fromFileIndex - toFileIndex) == 1 && Math.abs(fromRankIndex - toRankIndex) == 2))) {
-                System.out.println("Invalid move for Knight.");
-                return;
-            }
-        } else if(fromPiece.toString().equalsIgnoreCase("r")) {
-            validateRookMove(toFileIndex, toRankIndex, fromFileIndex, fromRankIndex);
+        if(!validateMove(fromPiece, fromFileIndex, fromRankIndex, toFileIndex, toRankIndex)){
             return;
-        } else if(fromPiece.toString().equalsIgnoreCase("b")) {
-            if(fromFileIndex == toFileIndex || toRankIndex == fromRankIndex) {
-                System.out.println("Cannot create valid path for Bishop.");
-                return;
-            } else if(Math.abs(fromFileIndex- toFileIndex) != Math.abs(fromRankIndex- toRankIndex)) {
-                System.out.println("Cannot create valid path for Bishop.");
-                return;
-            } else {
-                if(fromFileIndex < toFileIndex && fromRankIndex < toRankIndex) {
-                    for(int i = 1; i <= toFileIndex -fromFileIndex; i++) {
-                        if(board[fromRankIndex+i][fromFileIndex+i] != null) {
-                            System.out.println("Cannot create valid path for Bishop.");
-                            return;
-                        }
-                    }
-                } else if(fromFileIndex < toFileIndex && fromRankIndex > toRankIndex) {
-                    for(int i = 1; i <= toFileIndex -fromFileIndex; i++) {
-                        if(board[fromRankIndex-i][fromFileIndex+i] != null) {
-                            System.out.println("Cannot create valid path for Bishop.");
-                            return;
-                        }
-                    }
-                } else if(fromFileIndex > toFileIndex && fromRankIndex > toRankIndex) {
-                    for(int i = 1; i <= fromFileIndex- toFileIndex; i++) {
-                        if(board[fromRankIndex-i][fromFileIndex-i] != null) {
-                            System.out.println("Cannot create valid path for Bishop.");
-                            return;
-                        }
-                    }
-                } else if(fromFileIndex > toFileIndex && fromRankIndex < toRankIndex) {
-                    for(int i = 1; i <= fromFileIndex- toFileIndex; i++) {
-                        if(board[fromRankIndex+i][fromFileIndex-i] != null) {
-                            System.out.println("Cannot create valid path for Bishop.");
-                            return;
-                        }
-                    }
-                }
-            }
-        } else if (fromPiece.toString().equalsIgnoreCase("q")) {
-            if(fromFileIndex == toFileIndex && toRankIndex == fromRankIndex) {
-                System.out.println("Cannot create valid path for Queen.");
-                return;
-            } else if(fromFileIndex == toFileIndex) {
-                if(toRankIndex >fromRankIndex) {
-                    for(int i = fromRankIndex+1; i<= toRankIndex; i++) {
-                        if(board[i][fromFileIndex] != null) {
-                            System.out.println("Cannot create valid path for Queen.");
-                            return;
-                        }
-                    }
-                } else {
-                    for(int i = fromRankIndex-1; i>= toRankIndex; i--) {
-                        if(board[i][fromFileIndex] != null) {
-                            System.out.println("Cannot create valid path for Queen.");
-                            return;
-                        }
-                    }
-                }
-            } else if(fromRankIndex == toRankIndex){
-                if(toFileIndex >fromFileIndex) {
-                    for(int i = fromFileIndex+1; i<= toFileIndex; i++) {
-                        if(board[fromRankIndex][i] != null) {
-                            System.out.println("Cannot create valid path for Queen.");
-                            return;
-                        }
-                    }
-                } else {
-                    for(int i=fromFileIndex-1; i>=fromFileIndex; i--) {
-                        if(board[fromRankIndex][i] != null) {
-                            System.out.println("Cannot create valid path for Queen.");
-                            return;
-                        }
-                    }
-                }
-            } else if(Math.abs(fromFileIndex- toFileIndex) != Math.abs(fromRankIndex- toRankIndex)) {
-                System.out.println("Cannot create valid path for Queen.");
-                return;
-            } else {
-                if (fromFileIndex < toFileIndex && fromRankIndex < toRankIndex) {
-                    for (int i = 1; i <= toFileIndex - fromFileIndex; i++) {
-                        if (board[fromRankIndex + i][fromFileIndex + i] != null) {
-                            System.out.println("Cannot create valid path for Queen.");
-                            return;
-                        }
-                    }
-                } else if (fromFileIndex < toFileIndex && fromRankIndex > toRankIndex) {
-                    for (int i = 1; i <= toFileIndex - fromFileIndex; i++) {
-                        if (board[fromRankIndex - i][fromFileIndex + i] != null) {
-                            System.out.println("Cannot create valid path for Queen.");
-                            return;
-                        }
-                    }
-                } else if (fromFileIndex > toFileIndex && fromRankIndex > toRankIndex) {
-                    for (int i = 1; i <= fromFileIndex - toFileIndex; i++) {
-                        if (board[fromRankIndex - i][fromFileIndex - i] != null) {
-                            System.out.println("Cannot create valid path for Queen.");
-                            return;
-                        }
-                    }
-                } else if (fromFileIndex > toFileIndex && fromRankIndex < toRankIndex) {
-                    for (int i = 1; i <= fromFileIndex - toFileIndex; i++) {
-                        if (board[fromRankIndex + i][fromFileIndex - i] != null) {
-                            System.out.println("Cannot create valid path for Queen.");
-                            return;
-                        }
-                    }
-                }
-            }
-        } else if(fromPiece.toString().equalsIgnoreCase("k")) {
-            if(fromFileIndex == toFileIndex && toRankIndex == fromRankIndex) {
-                System.out.println("Cannot create valid path for King.");
-                return;
-            } else if (Math.abs(fromFileIndex- toFileIndex) > 1) {
-                System.out.println("Cannot create valid path for King.");
-                return;
-            } else if (Math.abs(fromRankIndex- toRankIndex) > 1) {
-                System.out.println("Cannot create valid path for King.");
-                return;
-            } else if (board[toRankIndex][toFileIndex] != null) {
-                System.out.println("Cannot create valid path for King.");
-                return;
-            }
-        } else if (fromPiece.toString().equalsIgnoreCase("p")) {
-            if(fromFileIndex != toFileIndex) {
-                System.out.println("Cannot create valid path for Pawn.");
-                return;
-            }
-            if(playerTurnIsWhite) {
-                if(fromRankIndex == 6) {
-                    int rankDelta = fromRankIndex - toRankIndex;
-                    if(rankDelta > 2 || rankDelta < 1) {
-                        System.out.println("Cannot create valid path for Pawn.");
-                        return;
-                    } else if (rankDelta == 1) {
-                        if(board[toRankIndex][toFileIndex] != null) {
-                            System.out.println("Cannot create valid path for Pawn.");
-                            return;
-                        }
-                    } else if (rankDelta == 2) {
-                        if(board[toRankIndex][toFileIndex] != null || board[toRankIndex -1][toFileIndex] != null) {
-                            System.out.println("Cannot create valid path for Pawn.");
-                            return;
-                        }
-                    }
-                } else {
-                    int rankDelta = fromRankIndex - toRankIndex;
-                    if(rankDelta != 1) {
-                        System.out.println("Cannot create valid path for Pawn.");
-                        return;
-                    } else {
-                        if(board[toRankIndex][toFileIndex] != null) {
-                            System.out.println("Cannot create valid path for Pawn.");
-                            return;
-                        }
-                    }
-                }
-            } else {
-                if(fromRankIndex == 1) {
-                    int rankDelta = fromRankIndex - toRankIndex;
-                    if(rankDelta < -2 || rankDelta > -1) {
-                        System.out.println("Cannot create valid path for Pawn.");
-                        return;
-                    } else if (rankDelta == -1) {
-                        if(board[toRankIndex][toFileIndex] != null) {
-                            System.out.println("Cannot create valid path for Pawn.");
-                            return;
-                        }
-                    } else if (rankDelta == -2) {
-                        if(board[toRankIndex][toFileIndex] != null || board[toRankIndex +1][toFileIndex] != null) {
-                            System.out.println("Cannot create valid path for Pawn.");
-                            return;
-                        }
-                    }
-                } else {
-                    int rankDelta = fromRankIndex - toRankIndex;
-                    if(rankDelta != -1) {
-                        System.out.println("Cannot create valid path for Pawn.");
-                        return;
-                    } else {
-                        if(board[toRankIndex][toFileIndex] != null) {
-                            System.out.println("Cannot create valid path for Pawn.");
-                            return;
-                        }
-                    }
-                }
-            }
         }
+
 
         //Handle the promotion of a pawn.
         if(fromPiece.toString().equalsIgnoreCase("p")) {
@@ -341,6 +146,207 @@ public class Chess {
         playerTurnIsWhite = !playerTurnIsWhite;
     }
 
+    private boolean validateMove(Piece fromPiece, int fromFileIndex, int fromRankIndex, int toFileIndex, int toRankIndex){
+        if (correctPlayerNotMovingTheirPiece(fromPiece)) return false;
+
+        //Validate Piece Movement
+        if(fromPiece.toString().equalsIgnoreCase("n")) {
+            if (!((Math.abs(fromFileIndex - toFileIndex) == 2 && Math.abs(fromRankIndex - toRankIndex) == 1) || (Math.abs(fromFileIndex - toFileIndex) == 1 && Math.abs(fromRankIndex - toRankIndex) == 2))) {
+                System.out.println("Invalid move for Knight.");
+                return false;
+            }
+        } else if(fromPiece.toString().equalsIgnoreCase("r")) {
+            validateRookMove(toFileIndex, toRankIndex, fromFileIndex, fromRankIndex);
+            return false;
+        } else if(fromPiece.toString().equalsIgnoreCase("b")) {
+            if(fromFileIndex == toFileIndex || toRankIndex == fromRankIndex) {
+                System.out.println("Cannot create valid path for Bishop.");
+                return false;
+            } else if(Math.abs(fromFileIndex- toFileIndex) != Math.abs(fromRankIndex- toRankIndex)) {
+                System.out.println("Cannot create valid path for Bishop.");
+                return false;
+            } else {
+                if(fromFileIndex < toFileIndex && fromRankIndex < toRankIndex) {
+                    for(int i = 1; i <= toFileIndex -fromFileIndex; i++) {
+                        if(board[fromRankIndex+i][fromFileIndex+i] != null) {
+                            System.out.println("Cannot create valid path for Bishop.");
+                            return false;
+                        }
+                    }
+                } else if(fromFileIndex < toFileIndex && fromRankIndex > toRankIndex) {
+                    for(int i = 1; i <= toFileIndex -fromFileIndex; i++) {
+                        if(board[fromRankIndex-i][fromFileIndex+i] != null) {
+                            System.out.println("Cannot create valid path for Bishop.");
+                            return false;
+                        }
+                    }
+                } else if(fromFileIndex > toFileIndex && fromRankIndex > toRankIndex) {
+                    for(int i = 1; i <= fromFileIndex- toFileIndex; i++) {
+                        if(board[fromRankIndex-i][fromFileIndex-i] != null) {
+                            System.out.println("Cannot create valid path for Bishop.");
+                            return false;
+                        }
+                    }
+                } else if(fromFileIndex > toFileIndex && fromRankIndex < toRankIndex) {
+                    for(int i = 1; i <= fromFileIndex- toFileIndex; i++) {
+                        if(board[fromRankIndex+i][fromFileIndex-i] != null) {
+                            System.out.println("Cannot create valid path for Bishop.");
+                            return false;
+                        }
+                    }
+                }
+            }
+        } else if (fromPiece.toString().equalsIgnoreCase("q")) {
+            if(fromFileIndex == toFileIndex && toRankIndex == fromRankIndex) {
+                System.out.println("Cannot create valid path for Queen.");
+                return false;
+            } else if(fromFileIndex == toFileIndex) {
+                if(toRankIndex >fromRankIndex) {
+                    for(int i = fromRankIndex+1; i<= toRankIndex; i++) {
+                        if(board[i][fromFileIndex] != null) {
+                            System.out.println("Cannot create valid path for Queen.");
+                            return false;
+                        }
+                    }
+                } else {
+                    for(int i = fromRankIndex-1; i>= toRankIndex; i--) {
+                        if(board[i][fromFileIndex] != null) {
+                            System.out.println("Cannot create valid path for Queen.");
+                            return false;
+                        }
+                    }
+                }
+            } else if(fromRankIndex == toRankIndex){
+                if(toFileIndex >fromFileIndex) {
+                    for(int i = fromFileIndex+1; i<= toFileIndex; i++) {
+                        if(board[fromRankIndex][i] != null) {
+                            System.out.println("Cannot create valid path for Queen.");
+                            return false;
+                        }
+                    }
+                } else {
+                    for(int i=fromFileIndex-1; i>=fromFileIndex; i--) {
+                        if(board[fromRankIndex][i] != null) {
+                            System.out.println("Cannot create valid path for Queen.");
+                            return false;
+                        }
+                    }
+                }
+            } else if(Math.abs(fromFileIndex- toFileIndex) != Math.abs(fromRankIndex- toRankIndex)) {
+                System.out.println("Cannot create valid path for Queen.");
+                return false;
+            } else {
+                if (fromFileIndex < toFileIndex && fromRankIndex < toRankIndex) {
+                    for (int i = 1; i <= toFileIndex - fromFileIndex; i++) {
+                        if (board[fromRankIndex + i][fromFileIndex + i] != null) {
+                            System.out.println("Cannot create valid path for Queen.");
+                            return false;
+                        }
+                    }
+                } else if (fromFileIndex < toFileIndex && fromRankIndex > toRankIndex) {
+                    for (int i = 1; i <= toFileIndex - fromFileIndex; i++) {
+                        if (board[fromRankIndex - i][fromFileIndex + i] != null) {
+                            System.out.println("Cannot create valid path for Queen.");
+                            return false;
+                        }
+                    }
+                } else if (fromFileIndex > toFileIndex && fromRankIndex > toRankIndex) {
+                    for (int i = 1; i <= fromFileIndex - toFileIndex; i++) {
+                        if (board[fromRankIndex - i][fromFileIndex - i] != null) {
+                            System.out.println("Cannot create valid path for Queen.");
+                            return false;
+                        }
+                    }
+                } else if (fromFileIndex > toFileIndex && fromRankIndex < toRankIndex) {
+                    for (int i = 1; i <= fromFileIndex - toFileIndex; i++) {
+                        if (board[fromRankIndex + i][fromFileIndex - i] != null) {
+                            System.out.println("Cannot create valid path for Queen.");
+                            return false;
+                        }
+                    }
+                }
+            }
+        } else if(fromPiece.toString().equalsIgnoreCase("k")) {
+            if(fromFileIndex == toFileIndex && toRankIndex == fromRankIndex) {
+                System.out.println("Cannot create valid path for King.");
+                return false;
+            } else if (Math.abs(fromFileIndex- toFileIndex) > 1) {
+                System.out.println("Cannot create valid path for King.");
+                return false;
+            } else if (Math.abs(fromRankIndex- toRankIndex) > 1) {
+                System.out.println("Cannot create valid path for King.");
+                return false;
+            } else if (board[toRankIndex][toFileIndex] != null) {
+                System.out.println("Cannot create valid path for King.");
+                return false;
+            }
+        } else if (fromPiece.toString().equalsIgnoreCase("p")) {
+            if(fromFileIndex != toFileIndex) {
+                System.out.println("Cannot create valid path for Pawn.");
+                return false;
+            }
+            if(playerTurnIsWhite) {
+                if(fromRankIndex == 6) {
+                    int rankDelta = fromRankIndex - toRankIndex;
+                    if(rankDelta > 2 || rankDelta < 1) {
+                        System.out.println("Cannot create valid path for Pawn.");
+                        return false;
+                    } else if (rankDelta == 1) {
+                        if(board[toRankIndex][toFileIndex] != null) {
+                            System.out.println("Cannot create valid path for Pawn.");
+                            return false;
+                        }
+                    } else if (rankDelta == 2) {
+                        if(board[toRankIndex][toFileIndex] != null || board[toRankIndex -1][toFileIndex] != null) {
+                            System.out.println("Cannot create valid path for Pawn.");
+                            return false;
+                        }
+                    }
+                } else {
+                    int rankDelta = fromRankIndex - toRankIndex;
+                    if(rankDelta != 1) {
+                        System.out.println("Cannot create valid path for Pawn.");
+                        return false;
+                    } else {
+                        if(board[toRankIndex][toFileIndex] != null) {
+                            System.out.println("Cannot create valid path for Pawn.");
+                            return false;
+                        }
+                    }
+                }
+            } else {
+                if(fromRankIndex == 1) {
+                    int rankDelta = fromRankIndex - toRankIndex;
+                    if(rankDelta < -2 || rankDelta > -1) {
+                        System.out.println("Cannot create valid path for Pawn.");
+                        return false;
+                    } else if (rankDelta == -1) {
+                        if(board[toRankIndex][toFileIndex] != null) {
+                            System.out.println("Cannot create valid path for Pawn.");
+                            return false;
+                        }
+                    } else if (rankDelta == -2) {
+                        if(board[toRankIndex][toFileIndex] != null || board[toRankIndex +1][toFileIndex] != null) {
+                            System.out.println("Cannot create valid path for Pawn.");
+                            return false;
+                        }
+                    }
+                } else {
+                    int rankDelta = fromRankIndex - toRankIndex;
+                    if(rankDelta != -1) {
+                        System.out.println("Cannot create valid path for Pawn.");
+                        return false;
+                    } else {
+                        if(board[toRankIndex][toFileIndex] != null) {
+                            System.out.println("Cannot create valid path for Pawn.");
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
     private void validateRookMove(int toFileIndex, int toRankIndex, int fromFileIndex, int fromRankIndex) {
         if(fromFileIndex == toFileIndex && toRankIndex == fromRankIndex) {
             System.out.println("Rook must move at least 1 square.");
