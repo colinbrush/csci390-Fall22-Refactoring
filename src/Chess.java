@@ -112,6 +112,7 @@ public class Chess {
             return;
         }
 
+        if (correctPlayerNotMovingTheirPiece(fromPiece)) return;
 
         //Handle the promotion of a pawn.
         if(fromPiece.toString().equalsIgnoreCase("p")) {
