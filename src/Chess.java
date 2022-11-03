@@ -72,26 +72,9 @@ public class Chess {
                 System.out.println("Move is invalid. Please input a valid move.");
                 continue;
             }
+            //the mover only has one function and will handle captures inside of move
+            myMover.movePiece(move);
 
-            boolean capture = (move.charAt(2) == 'x');
-            if(capture){
-                myMover.capturePiece(move);
-            }
-            else{
-                myMover.movePiece(move);
-            }
-
-            Square fromSquare = new Square();
-            fromSquare.setFileIndex(calcFileIndex(move.charAt(0)));
-            fromSquare.setRankIndex(calcRankIndex(Integer.valueOf(move.substring(1,2))));
-
-            int toFileIndex = calcFileIndex(move.charAt(3));
-            int toRankIndex = calcRankIndex(Integer.valueOf(move.substring(4,5)));
-
-            String pawnPromotionPiece = null;
-            if(move.length() == 6) {
-                pawnPromotionPiece = move.substring(5,6);
-            }
             // We are not going to worry about special moves like castling and en passant
         }
 
