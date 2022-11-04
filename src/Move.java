@@ -1,10 +1,13 @@
 import java.util.regex.Pattern;
 
 public class Move {
-    Piece[][] board;
+
+    //I'm not sure whats being asked about moving the i/o out of the move class and into an enum
+    //I've done everything else for making Board work
+    Board currentBoard;
     boolean playerTurnIsWhite;
-    public Move(Piece[][] startBoard){
-        this.board = startBoard;
+    public Move(Board startBoard){
+        this.currentBoard = startBoard;
         playerTurnIsWhite = true;
     }
 
@@ -40,7 +43,7 @@ public class Move {
     private boolean movement(Square fromSquare, int toFileIndex, int toRankIndex, String pawnPromotionPiece, boolean capture) {
         int fromFileIndex = fromSquare.getFileIndex();
         int fromRankIndex = fromSquare.getRankIndex();
-        Piece fromPiece = board[fromRankIndex][fromFileIndex];
+        Piece fromPiece = currentBoard.getPiece(fromRankIndex,fromFileIndex);
 
         if(fromPiece == null) {
             System.out.println("Select a square with a piece.");
@@ -60,8 +63,8 @@ public class Move {
         }
 
         //If we have gotten here, that means the move is valid and update the board position
-        board[toRankIndex][toFileIndex] = fromPiece;
-        board[fromRankIndex][fromFileIndex] = null;
+        currentBoard.setPiece(toRankIndex, toFileIndex, fromPiece);
+        currentBoard.setPiece(fromRankIndex,fromFileIndex, null);
 
         //We return true since our movement was successful;
         return true;
@@ -114,7 +117,7 @@ public class Move {
             if (validateKing(fromFileIndex, fromRankIndex, toFileIndex, toRankIndex)) return false;
         } else if (fromPiece.toString().equalsIgnoreCase("p")) {
             if (validatePawn(fromFileIndex, fromRankIndex, toFileIndex, toRankIndex, capture)) return false;
-        }else if(board[toRankIndex][toFileIndex] != null || capture){
+        }else if(currentBoard.getPiece(toRankIndex,toFileIndex) != null || capture){
             return false;
         }
         return true;
@@ -141,14 +144,14 @@ public class Move {
         } else if(fromFileIndex == toFileIndex) {
             if(toRankIndex > fromRankIndex) {
                 for(int i = fromRankIndex +1; i< toRankIndex; i++) {
-                    if(board[i][fromFileIndex] != null) {
+                    if(currentBoard.getPiece(i,fromFileIndex) != null) {
                         System.out.println("Cannot create valid path for Queen.");
                         return true;
                     }
                 }
             } else {
                 for(int i = fromRankIndex -1; i> toRankIndex; i--) {
-                    if(board[i][fromFileIndex] != null) {
+                    if(currentBoard.getPiece(i,fromFileIndex) != null) {
                         System.out.println("Cannot create valid path for Queen.");
                         return true;
                     }
@@ -157,14 +160,14 @@ public class Move {
         } else if(fromRankIndex == toRankIndex){
             if(toFileIndex > fromFileIndex) {
                 for(int i = fromFileIndex +1; i< toFileIndex; i++) {
-                    if(board[fromRankIndex][i] != null) {
+                    if(currentBoard.getPiece(fromRankIndex, i) != null) {
                         System.out.println("Cannot create valid path for Queen.");
                         return true;
                     }
                 }
             } else {
                 for(int i = fromFileIndex -1; i> fromFileIndex; i--) {
-                    if(board[fromRankIndex][i] != null) {
+                    if(currentBoard.getPiece(fromRankIndex, i) != null) {
                         System.out.println("Cannot create valid path for Queen.");
                         return true;
                     }
@@ -176,28 +179,28 @@ public class Move {
         } else {
             if (fromFileIndex < toFileIndex && fromRankIndex < toRankIndex) {
                 for (int i = 1; i < toFileIndex - fromFileIndex; i++) {
-                    if (board[fromRankIndex + i][fromFileIndex + i] != null) {
+                    if (currentBoard.getPiece(fromRankIndex + i,fromFileIndex + i) != null) {
                         System.out.println("Cannot create valid path for Queen.");
                         return true;
                     }
                 }
             } else if (fromFileIndex < toFileIndex && fromRankIndex > toRankIndex) {
                 for (int i = 1; i < toFileIndex - fromFileIndex; i++) {
-                    if (board[fromRankIndex - i][fromFileIndex + i] != null) {
+                    if (currentBoard.getPiece(fromRankIndex - i, fromFileIndex + i) != null) {
                         System.out.println("Cannot create valid path for Queen.");
                         return true;
                     }
                 }
             } else if (fromFileIndex > toFileIndex && fromRankIndex > toRankIndex) {
                 for (int i = 1; i < fromFileIndex - toFileIndex; i++) {
-                    if (board[fromRankIndex - i][fromFileIndex - i] != null) {
+                    if (currentBoard.getPiece(fromRankIndex - i, fromFileIndex - i) != null) {
                         System.out.println("Cannot create valid path for Queen.");
                         return true;
                     }
                 }
             } else if (fromFileIndex > toFileIndex && fromRankIndex < toRankIndex) {
                 for (int i = 1; i < fromFileIndex - toFileIndex; i++) {
-                    if (board[fromRankIndex + i][fromFileIndex - i] != null) {
+                    if (currentBoard.getPiece(fromRankIndex + i, fromFileIndex - i) != null) {
                         System.out.println("Cannot create valid path for Queen.");
                         return true;
                     }
@@ -217,28 +220,28 @@ public class Move {
         } else {
             if(fromFileIndex < toFileIndex && fromRankIndex < toRankIndex) {
                 for(int i = 1; i < toFileIndex - fromFileIndex; i++) {
-                    if(board[fromRankIndex +i][fromFileIndex +i] != null) {
+                    if(currentBoard.getPiece(fromRankIndex +i, fromFileIndex +i) != null) {
                         System.out.println("Cannot create valid path for Bishop.");
                         return true;
                     }
                 }
             } else if(fromFileIndex < toFileIndex && fromRankIndex > toRankIndex) {
                 for(int i = 1; i < toFileIndex - fromFileIndex; i++) {
-                    if(board[fromRankIndex -i][fromFileIndex +i] != null) {
+                    if(currentBoard.getPiece(fromRankIndex -i, fromFileIndex +i) != null) {
                         System.out.println("Cannot create valid path for Bishop.");
                         return true;
                     }
                 }
             } else if(fromFileIndex > toFileIndex && fromRankIndex > toRankIndex) {
                 for(int i = 1; i < fromFileIndex - toFileIndex; i++) {
-                    if(board[fromRankIndex -i][fromFileIndex -i] != null) {
+                    if(currentBoard.getPiece(fromRankIndex -i, fromFileIndex -i) != null) {
                         System.out.println("Cannot create valid path for Bishop.");
                         return true;
                     }
                 }
             } else if(fromFileIndex > toFileIndex && fromRankIndex < toRankIndex) {
                 for(int i = 1; i < fromFileIndex - toFileIndex; i++) {
-                    if(board[fromRankIndex +i][fromFileIndex -i] != null) {
+                    if(currentBoard.getPiece(fromRankIndex +i, fromFileIndex -i) != null) {
                         System.out.println("Cannot create valid path for Bishop.");
                         return true;
                     }
@@ -268,7 +271,7 @@ public class Move {
                 System.out.println("Cannot create valid path for Pawn.");
                 return true;
             }
-            if(board[toRankIndex][toFileIndex] == null){
+            if(currentBoard.getPiece(toRankIndex, toFileIndex) == null){
                 System.out.println("Cannot create valid path for Pawn.");
                 return true;
             }
@@ -286,12 +289,12 @@ public class Move {
                     System.out.println("Cannot create valid path for Pawn.");
                     return true;
                 } else if (rankDelta == 1) {
-                    if(board[toRankIndex][toFileIndex] != null) {
+                    if(currentBoard.getPiece(toRankIndex, toFileIndex) != null) {
                         System.out.println("Cannot create valid path for Pawn.");
                         return true;
                     }
                 } else if (rankDelta == 2) {
-                    if(board[toRankIndex][toFileIndex] != null || board[toRankIndex -1][toFileIndex] != null) {
+                    if(currentBoard.getPiece(toRankIndex, toFileIndex) != null || currentBoard.getPiece(toRankIndex -1,toFileIndex) != null) {
                         System.out.println("Cannot create valid path for Pawn.");
                         return true;
                     }
@@ -301,7 +304,7 @@ public class Move {
                     System.out.println("Cannot create valid path for Pawn.");
                     return true;
                 } else {
-                    if(board[toRankIndex][toFileIndex] != null) {
+                    if(currentBoard.getPiece(toRankIndex, toFileIndex) != null) {
                         System.out.println("Cannot create valid path for Pawn.");
                         return true;
                     }
@@ -314,12 +317,12 @@ public class Move {
                     System.out.println("Cannot create valid path for Pawn.");
                     return true;
                 } else if (rankDelta == -1) {
-                    if(board[toRankIndex][toFileIndex] != null) {
+                    if(currentBoard.getPiece(toRankIndex, toFileIndex) != null) {
                         System.out.println("Cannot create valid path for Pawn.");
                         return true;
                     }
                 } else if (rankDelta == -2) {
-                    if(board[toRankIndex][toFileIndex] != null || board[toRankIndex +1][toFileIndex] != null) {
+                    if(currentBoard.getPiece(toRankIndex,toFileIndex) != null || currentBoard.getPiece(toRankIndex +1, toFileIndex) != null) {
                         System.out.println("Cannot create valid path for Pawn.");
                         return true;
                     }
@@ -329,7 +332,7 @@ public class Move {
                     System.out.println("Cannot create valid path for Pawn.");
                     return true;
                 } else {
-                    if(board[toRankIndex][toFileIndex] != null) {
+                    if(currentBoard.getPiece(toRankIndex,toFileIndex) != null) {
                         System.out.println("Cannot create valid path for Pawn.");
                         return true;
                     }
@@ -346,14 +349,14 @@ public class Move {
         } else if(fromFileIndex == toFileIndex) {
             if(toRankIndex > fromRankIndex) {
                 for(int i = fromRankIndex +1; i< toRankIndex; i++) {
-                    if(board[i][fromFileIndex] != null) {
+                    if(currentBoard.getPiece(i, fromFileIndex) != null) {
                         System.out.println("Cannot create valid path for Rook.");
                         return false;
                     }
                 }
             } else {
                 for(int i = fromRankIndex -1; i> toRankIndex; i--) {
-                    if(board[i][fromFileIndex] != null) {
+                    if(currentBoard.getPiece(i, fromFileIndex) != null) {
                         System.out.println("Cannot create valid path for Rook.");
                         return false;
                     }
@@ -362,14 +365,14 @@ public class Move {
         } else if(fromRankIndex == toRankIndex){
             if(toFileIndex > fromFileIndex) {
                 for(int i = fromFileIndex +1; i< toFileIndex; i++) {
-                    if(board[fromRankIndex][i] != null) {
+                    if(currentBoard.getPiece(fromRankIndex, i) != null) {
                         System.out.println("Cannot create valid path for Rook.");
                         return false;
                     }
                 }
             } else {
                 for(int i = fromFileIndex -1; i> fromFileIndex; i--) {
-                    if(board[fromRankIndex][i] != null) {
+                    if(currentBoard.getPiece(fromRankIndex, i) != null) {
                         System.out.println("Cannot create valid path for Rook.");
                         return false;
                     }
